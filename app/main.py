@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import ai, skills, jobs
+from app.routers import ai, skills, jobs
 
 app = FastAPI(
     title="LinkedInsight",
