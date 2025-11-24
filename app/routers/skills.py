@@ -7,18 +7,49 @@ This router provides endpoints for querying the skills graph, including:
 - Learning paths to acquire skills
 """
 
-from fastapi import APIRouter, Query, HTTPException
+from fastapi import APIRouter, Query, HTTPException, Body
 from typing import List, Dict, Any
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from app.core.graph import (
     get_related_skills,
     get_prerequisites,
     get_learning_path,
     get_all_skills,
-    get_graph_stats
+    get_graph_stats,
+    add_skill,
+    add_prerequisite
 )
 
 router = APIRouter(prefix="/skills", tags=["skills"])
+
+
+def find_skill_case_insensitive(skill_name: str) -> str:
+    """
+    Find a skill in the graph using case-insensitive matching.
+    
+    Args:
+        skill_name: The skill name to search for (case-insensitive)
+    
+    Returns:
+        The exact skill name as stored in the graph, or the original name if not found
+    """
+    from app.core.graph import get_all_skills
+    
+    skill_name = skill_name.strip()
+    all_skills = get_all_skills()
+    
+    # Try exact match first
+    if skill_name in all_skills:
+        return skill_name
+    
+    # Try case-insensitive match
+    skill_lower = skill_name.lower()
+    for skill in all_skills:
+        if skill.lower() == skill_lower:
+            return skill
+    
+    # If not found, return original (will be handled by graph functions)
+    return skill_name
 
 
 class RelatedSkillsResponse(BaseModel):
@@ -81,7 +112,8 @@ def get_related_skills_endpoint(skill: str = Query(..., description="The skill t
         if not skill or not skill.strip():
             raise HTTPException(status_code=400, detail="Skill parameter cannot be empty")
         
-        skill = skill.strip()
+        # Find skill with case-insensitive matching
+        skill = find_skill_case_insensitive(skill)
         related = get_related_skills(skill)
         
         return RelatedSkillsResponse(
@@ -132,7 +164,8 @@ def get_prerequisites_endpoint(skill: str = Query(..., description="The skill to
         if not skill or not skill.strip():
             raise HTTPException(status_code=400, detail="Skill parameter cannot be empty")
         
-        skill = skill.strip()
+        # Find skill with case-insensitive matching
+        skill = find_skill_case_insensitive(skill)
         prerequisites = get_prerequisites(skill)
         
         return PrerequisitesResponse(
@@ -184,7 +217,8 @@ def get_learning_path_endpoint(skill: str = Query(..., description="The target s
         if not skill or not skill.strip():
             raise HTTPException(status_code=400, detail="Skill parameter cannot be empty")
         
-        skill = skill.strip()
+        # Find skill with case-insensitive matching
+        skill = find_skill_case_insensitive(skill)
         path = get_learning_path(skill)
         
         if not path:
@@ -265,4 +299,107 @@ def get_graph_stats_endpoint():
         return stats
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving graph stats: {str(e)}")
+
+
+class AddSkillRequest(BaseModel):
+    """Request model for adding a skill."""
+    skill: str = Field(..., description="The skill name to add")
+
+
+class AddPrerequisiteRequest(BaseModel):
+    """Request model for adding a prerequisite relationship."""
+    skill: str = Field(..., description="The skill that requires the prerequisite")
+    prerequisite: str = Field(..., description="The prerequisite skill")
+
+
+@router.post("/add")
+def add_skill_endpoint(request: AddSkillRequest = Body(...)):
+    """
+    Add a skill to the skills graph.
+    
+    This endpoint allows you to add a new skill node to the graph.
+    The skill will be available for creating relationships and querying.
+    
+    **Request Body:**
+    - `skill` (str): The skill name to add
+    
+    **Returns:**
+    - `success` (bool): Whether the skill was added successfully
+    - `skill` (str): The skill name that was added
+    - `message` (str): Status message
+    
+    **Example:**
+    ```bash
+    POST /skills/add
+    {
+        "skill": "Python"
+    }
+    ```
+    """
+    try:
+        if not request.skill or not request.skill.strip():
+            raise HTTPException(status_code=400, detail="Skill name cannot be empty")
+        
+        skill = request.skill.strip()
+        add_skill(skill)
+        
+        return {
+            "success": True,
+            "skill": skill,
+            "message": f"Skill '{skill}' added successfully"
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error adding skill: {str(e)}")
+
+
+@router.post("/add-prerequisite")
+def add_prerequisite_endpoint(request: AddPrerequisiteRequest = Body(...)):
+    """
+    Add a prerequisite relationship between two skills.
+    
+    This endpoint creates a directed edge in the graph: prerequisite → skill.
+    This means the prerequisite must be learned before the skill.
+    
+    **Request Body:**
+    - `skill` (str): The skill that requires the prerequisite
+    - `prerequisite` (str): The prerequisite skill
+    
+    **Returns:**
+    - `success` (bool): Whether the relationship was added successfully
+    - `skill` (str): The skill name
+    - `prerequisite` (str): The prerequisite name
+    - `message` (str): Status message
+    
+    **Example:**
+    ```bash
+    POST /skills/add-prerequisite
+    {
+        "skill": "Machine Learning",
+        "prerequisite": "Python"
+    }
+    ```
+    """
+    try:
+        if not request.skill or not request.skill.strip():
+            raise HTTPException(status_code=400, detail="Skill name cannot be empty")
+        if not request.prerequisite or not request.prerequisite.strip():
+            raise HTTPException(status_code=400, detail="Prerequisite name cannot be empty")
+        
+        skill = request.skill.strip()
+        prerequisite = request.prerequisite.strip()
+        
+        add_prerequisite(skill, prerequisite)
+        
+        return {
+            "success": True,
+            "skill": skill,
+            "prerequisite": prerequisite,
+            "message": f"Prerequisite relationship added: '{prerequisite}' → '{skill}'"
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error adding prerequisite: {str(e)}")
 

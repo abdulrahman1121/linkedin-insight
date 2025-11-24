@@ -4,10 +4,10 @@ import { LandingCTA } from '@/app/components/landing-cta';
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <div className="min-h-screen">
       <LandingHero />
       <LandingFeatures />
       <LandingCTA />
-    </main>
+    </div>
   );
 }

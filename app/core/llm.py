@@ -20,9 +20,12 @@ from typing import List, Optional
 # Load environment variables
 load_dotenv()
 
-# Initialize OpenAI client
+# Initialize OpenAI client with timeout
 # Uses the same API key as the embeddings service
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    timeout=30.0  # 30 second timeout for all requests
+)
 
 # Default model for chat completions
 # Using GPT-4 for better reasoning capabilities, with fallback to GPT-3.5-turbo
@@ -88,52 +91,27 @@ def generate_roadmap(skills: List[str], model: Optional[str] = None) -> str:
     # Construct the prompt for the LLM
     skills_str = ", ".join(valid_skills)
     
-    system_prompt = """You are an expert career coach and technical mentor specializing in 
-creating personalized learning roadmaps. Your roadmaps are practical, actionable, and 
-designed to help professionals acquire new skills efficiently."""
+    system_prompt = """You are an expert career coach creating concise, actionable learning roadmaps."""
     
-    user_prompt = f"""Create a detailed 4-week learning roadmap for the following skills: {skills_str}
+    user_prompt = f"""Create a 4-week learning roadmap for: {skills_str}
 
-The roadmap must be structured and include:
+Format as Markdown with:
+1. **Overview** (2-3 sentences)
+2. **Week 1-4** (each with: Objectives, Resources, Project - keep brief)
+3. **Next Steps** (2-3 sentences)
 
-1. **Overview**: Brief introduction explaining what will be learned and why it's valuable.
-
-2. **Week 1 - Foundations**:
-   - Objectives: What foundational concepts will be covered
-   - Resources: Specific courses, tutorials, documentation, or books to study
-   - Practice Project: A hands-on project to reinforce learning
-
-3. **Week 2 - Core Concepts**:
-   - Objectives: Building on Week 1, what core concepts will be mastered
-   - Resources: Recommended learning materials
-   - Practice Project: A more advanced project
-
-4. **Week 3 - Advanced Topics**:
-   - Objectives: Advanced concepts and real-world applications
-   - Resources: Advanced learning materials
-   - Practice Project: A comprehensive project
-
-5. **Week 4 - Integration & Mastery**:
-   - Objectives: Bringing everything together and mastering the skills
-   - Resources: Final learning materials and references
-   - Practice Project: A capstone project that demonstrates mastery
-
-6. **Summary & Next Steps**: How to continue learning and apply these skills
-
-Format the output as clean Markdown. Make it practical, specific, and actionable.
-Include concrete resource names (e.g., "Python.org official tutorial", "Fast.ai course", etc.)
-and project ideas that are achievable within each week."""
+Be concise and practical. Include specific resource names."""
     
     try:
-        # Call OpenAI API
+        # Call OpenAI API with optimized settings for speed
         response = client.chat.completions.create(
             model=model_to_use,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.7,  # Balance between creativity and consistency
-            max_tokens=2000   # Sufficient for a detailed roadmap
+            temperature=0.6,  # Slightly lower for faster, more consistent responses
+            max_tokens=1200  # Reduced for faster generation while still comprehensive
         )
         
         # Extract the generated roadmap
@@ -217,54 +195,30 @@ def explain_skill_gaps(
     user_skills_str = ", ".join(valid_user_skills) if valid_user_skills else "None specified"
     missing_skills_str = ", ".join(valid_missing_skills)
     
-    system_prompt = """You are an expert career advisor and technical mentor. You help 
-professionals understand their skill gaps and how to bridge them. Your explanations are 
-clear, motivating, and actionable."""
+    system_prompt = """You are an expert career advisor. Provide clear, concise skill gap explanations."""
     
-    user_prompt = f"""Analyze and explain the skill gaps for a professional with the following profile:
+    user_prompt = f"""Current Skills: {user_skills_str}
+Missing Skills: {missing_skills_str}
 
-**Current Skills**: {user_skills_str}
+Explain in Markdown:
+1. **Overview** (2-3 sentences)
+2. **Why Each Skill Matters** (brief for each)
+3. **Connections** (how missing skills build on current ones)
+4. **Career Impact** (what opportunities open up)
+5. **Next Steps** (prioritization and approach)
 
-**Missing Skills**: {missing_skills_str}
-
-Provide a comprehensive explanation that covers:
-
-1. **Overview**: Brief summary of the skill gaps and their significance.
-
-2. **Why Each Missing Skill Matters**:
-   For each missing skill, explain:
-   - Why it's important in today's job market
-   - What problems it helps solve
-   - How it enhances career prospects
-
-3. **Connections to Existing Skills**:
-   - How the missing skills build upon or complement existing skills
-   - What bridges exist between current and missing skills
-   - How existing skills provide a foundation for learning the missing ones
-
-4. **Career Path Implications**:
-   - What career paths or roles these skills unlock
-   - How acquiring these skills changes career trajectory
-   - What opportunities become available
-
-5. **Actionable Insights**:
-   - Prioritization: Which skills to learn first and why
-   - Learning approach: How to leverage existing skills when learning
-   - Expected outcomes: What to expect after acquiring these skills
-
-Format the output as clean Markdown. Be specific, motivating, and practical. 
-Make connections clear and show how the user's existing skills are valuable."""
+Be concise and actionable."""
     
     try:
-        # Call OpenAI API
+        # Call OpenAI API with optimized settings for speed
         response = client.chat.completions.create(
             model=model_to_use,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.7,  # Balance between creativity and consistency
-            max_tokens=2000   # Sufficient for a detailed explanation
+            temperature=0.6,  # Slightly lower for faster responses
+            max_tokens=1200  # Reduced for faster generation
         )
         
         # Extract the generated explanation

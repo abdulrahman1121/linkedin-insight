@@ -11,7 +11,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 // Get API URL from environment variable
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8001';
 
 /**
  * Create Axios instance with default configuration
@@ -22,7 +22,7 @@ export const apiClient: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
-  timeout: 10000, // 10 seconds
+  timeout: 60000, // 60 seconds (AI endpoints can take longer)
 });
 
 /**
@@ -104,10 +104,32 @@ apiClient.interceptors.response.use(
       }
     } else if (error.request) {
       // Request made but no response received
+      const baseURL = error.config?.baseURL || API_BASE_URL;
+      const fullURL = `${baseURL}${error.config?.url}`;
+      
       console.error('[API Network Error]', {
         message: error.message,
+        url: error.config?.url,
+        baseURL: baseURL,
+        fullURL: fullURL,
+        code: error.code,
         request: error.request,
       });
+      
+      // Provide helpful error message
+      if (error.code === 'ECONNREFUSED' || error.message.includes('ECONNREFUSED')) {
+        console.error(`❌ Connection refused - Is the backend server running on ${baseURL}?`);
+        console.error('   Make sure you started the FastAPI server with:');
+        console.error(`   uvicorn app.main:app --host 127.0.0.1 --port 8001`);
+      } else if (error.code === 'ETIMEDOUT' || error.message.includes('timeout')) {
+        console.error('⏱️ Request timed out - The backend may be slow or unresponsive');
+      } else {
+        console.error(`❌ Network error - Could not connect to ${baseURL}`);
+        console.error('   Check that:');
+        console.error(`   1. Backend is running on ${baseURL}`);
+        console.error('   2. Frontend .env.local has: NEXT_PUBLIC_API_URL=' + baseURL);
+        console.error('   3. You restarted the frontend after changing .env.local');
+      }
     } else {
       // Something else happened
       console.error('[API Error]', {

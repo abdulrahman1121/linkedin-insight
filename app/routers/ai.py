@@ -53,7 +53,7 @@ class SkillGapsResponse(BaseModel):
 
 
 @router.post("/roadmap", response_model=RoadmapResponse)
-def generate_learning_roadmap(request: RoadmapRequest):
+async def generate_learning_roadmap(request: RoadmapRequest):
     """
     Generate a detailed 4-week learning roadmap for acquiring missing skills.
     
@@ -132,7 +132,7 @@ def generate_learning_roadmap(request: RoadmapRequest):
 
 
 @router.post("/explain-skill-gaps", response_model=SkillGapsResponse)
-def explain_skill_gaps_endpoint(request: SkillGapsRequest):
+async def explain_skill_gaps_endpoint(request: SkillGapsRequest):
     """
     Generate an AI explanation of skill gaps and their importance.
     

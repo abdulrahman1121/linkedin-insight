@@ -3,7 +3,7 @@
  */
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Network, Search, Target } from 'lucide-react';
+import { Brain, Network, Target } from 'lucide-react';
 
 const features = [
   {
@@ -15,11 +15,6 @@ const features = [
     icon: Network,
     title: 'Skills Graph',
     description: 'Visualize skill prerequisites and dependencies to plan your learning journey effectively.',
-  },
-  {
-    icon: Search,
-    title: 'Job Matching',
-    description: 'Find jobs that match your skills using semantic search across thousands of listings.',
   },
   {
     icon: Target,
@@ -41,7 +36,7 @@ export function LandingFeatures() {
           </p>
         </div>
         
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-3">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (

@@ -11,6 +11,21 @@ import type {
   LearningPathResponse,
 } from './types';
 
+export interface AllSkillsResponse {
+  skills: string[];
+  count: number;
+}
+
+/**
+ * Get all available skills in the graph
+ * 
+ * @returns Promise with list of all skills and count
+ */
+export async function getAllSkills(): Promise<AllSkillsResponse> {
+  const response = await apiClient.get<AllSkillsResponse>('/skills/all');
+  return response.data;
+}
+
 /**
  * Get all skills related to a given skill (prerequisites and successors)
  * 
