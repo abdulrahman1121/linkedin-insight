@@ -6,17 +6,14 @@ for semantic similarity search.
 """
 
 import chromadb
-from chromadb.config import Settings
 from typing import List, Dict, Any, Optional
 from app.core.embeddings import embed_text
 
 
 # Initialize ChromaDB client (in-memory for now)
-# Set persistent=False to use in-memory storage
-client = chromadb.Client(Settings(
-    chroma_db_impl="duckdb+parquet",
-    persist_directory=None  # In-memory mode
-))
+# Using EphemeralClient for true in-memory storage (no persistence)
+# This is simpler and doesn't require file system access
+client = chromadb.EphemeralClient()
 
 # Collection name for job embeddings
 COLLECTION_NAME = "job_embeddings"
