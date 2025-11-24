@@ -1,5 +1,12 @@
-# Embeddings service for LinkedInsight
-# TODO: add batching + caching later
+"""
+Embeddings Service for LinkedInsight.
+
+This module provides text embedding functionality using OpenAI's embedding models.
+Embeddings are used to convert text into vector representations for semantic search
+and similarity matching in the vector database.
+
+TODO: Add batching and caching for improved performance.
+"""
 
 from openai import OpenAI
 from dotenv import load_dotenv
