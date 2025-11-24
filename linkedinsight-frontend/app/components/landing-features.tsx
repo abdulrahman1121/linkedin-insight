@@ -30,13 +30,13 @@ const features = [
 
 export function LandingFeatures() {
   return (
-    <section id="features" className="py-20 md:py-32">
+    <section id="features" className="py-20 md:py-32 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-4">
             Everything you need to advance your career
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-gray-600">
             Powerful tools to help you navigate your career path and achieve your professional goals.
           </p>
         </div>
@@ -45,15 +45,18 @@ export function LandingFeatures() {
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
-              <Card key={feature.title} className="border-2 hover:border-primary/50 transition-colors">
+              <Card 
+                key={feature.title} 
+                className="border border-gray-200 hover:border-[#0077B5] hover:shadow-lg transition-all bg-white"
+              >
                 <CardHeader>
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                    <Icon className="h-6 w-6 text-primary" />
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#0077B5]/10">
+                    <Icon className="h-6 w-6 text-[#0077B5]" />
                   </div>
-                  <CardTitle>{feature.title}</CardTitle>
+                  <CardTitle className="text-gray-900">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-base">
+                  <CardDescription className="text-base text-gray-600">
                     {feature.description}
                   </CardDescription>
                 </CardContent>

@@ -44,72 +44,74 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --radius: 0.5rem;
+  /* LinkedIn-themed colors using oklch format for compatibility */
+  --background: oklch(1 0 0); /* White */
+  --foreground: oklch(0.15 0 0); /* Black */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.15 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.15 0 0);
+  --primary: oklch(0.5 0.15 240); /* LinkedIn blue #0077B5 */
+  --primary-foreground: oklch(1 0 0); /* White text on blue */
+  --secondary: oklch(0.96 0 0); /* Light gray */
+  --secondary-foreground: oklch(0.15 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.5 0 0); /* Gray text */
+  --accent: oklch(0.5 0.15 240); /* LinkedIn blue */
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.55 0.22 25); /* Red for errors */
+  --border: oklch(0.9 0 0); /* Light border */
+  --input: oklch(0.9 0 0);
+  --ring: oklch(0.5 0.15 240); /* LinkedIn blue for focus rings */
+  --chart-1: oklch(0.5 0.15 240);
+  --chart-2: oklch(0.4 0.15 240); /* Darker LinkedIn blue */
+  --chart-3: oklch(0.5 0 0);
+  --chart-4: oklch(0.6 0 0);
+  --chart-5: oklch(0.7 0 0);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.15 0 0);
+  --sidebar-primary: oklch(0.5 0.15 240);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.96 0 0);
+  --sidebar-accent-foreground: oklch(0.15 0 0);
+  --sidebar-border: oklch(0.9 0 0);
+  --sidebar-ring: oklch(0.5 0.15 240);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Dark mode with LinkedIn-inspired colors */
+  --background: 18 18 18; /* Dark background */
+  --foreground: 255 255 255;
+  --card: 30 30 30;
+  --card-foreground: 255 255 255;
+  --popover: 30 30 30;
+  --popover-foreground: 255 255 255;
+  --primary: 0 119 181; /* Keep LinkedIn blue */
+  --primary-foreground: 255 255 255;
+  --secondary: 40 40 40;
+  --secondary-foreground: 255 255 255;
+  --muted: 40 40 40;
+  --muted-foreground: 180 180 180;
+  --accent: 0 119 181;
+  --accent-foreground: 255 255 255;
+  --destructive: 220 38 38;
+  --border: 50 50 50;
+  --input: 50 50 50;
+  --ring: 0 119 181;
+  --chart-1: 0 119 181;
+  --chart-2: 0 65 130;
+  --chart-3: 102 102 102;
+  --chart-4: 153 153 153;
+  --chart-5: 204 204 204;
+  --sidebar: 30 30 30;
+  --sidebar-foreground: 255 255 255;
+  --sidebar-primary: 0 119 181;
+  --sidebar-primary-foreground: 255 255 255;
+  --sidebar-accent: 40 40 40;
+  --sidebar-accent-foreground: 255 255 255;
+  --sidebar-border: 50 50 50;
+  --sidebar-ring: 0 119 181;
 }
 
 @layer base {
