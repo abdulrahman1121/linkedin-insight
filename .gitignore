@@ -12,14 +12,43 @@ ENV/
 # Environment variables
 .env
 .env.local
+.env.production
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+linkedinsight.db
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
 
+# Logs
+*.log
+
+# Next.js
+linkedinsight-frontend/.next/
+linkedinsight-frontend/out/
+linkedinsight-frontend/node_modules/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# ChromaDB
+chroma_db/
+.chroma/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
